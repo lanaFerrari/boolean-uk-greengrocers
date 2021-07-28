@@ -22,8 +22,7 @@
 // {
 //  ]
 
-
- const data = [
+ const storeItems = [
  {
   id: "001-beetroot", 
   name: "Beetroot",
@@ -76,6 +75,9 @@
 }
 ]
 
+const cartItems = [];
+
+// console.log(storeItems);
 
 // Create bridge using: ul class="item-list store--item-list"
 // Render function to create the items in "Greengrocers"
@@ -86,7 +88,7 @@
   </div>
   <button>Add to cart</button>
 </li> */
-/// button (Add to cart) has an addEventListener [HARD - think about it later]
+/// button (Add to cart) has an addEventListener
 
 const bridgeOne = document.querySelector(".store--item-list");
 const bridgeTwo = document.querySelector(".cart--item-list");
@@ -96,7 +98,7 @@ const bridgeThree = document.querySelector(".total-number");
 // console.log(bridgeTwo);
 // console.log(bridgeThree);
 
-function renderList(array){
+function renderStoreItems(array){
  for (let i = 0; i < array.length; i++) {
   const liItem = document.createElement("li");
 
@@ -107,7 +109,7 @@ function renderList(array){
 
  const img = document.createElement("img");
  const imgSrc = `assets/icons/${array[i].id}.svg`;
- const altSrc = `array[i].name`;
+ const altSrc = `${array[i]}.name`;
  img.setAttribute("src",  imgSrc);
  img.setAttribute("alt" , altSrc);
 
@@ -118,19 +120,63 @@ function renderList(array){
   button.innerText = "Add to cart";
 
     //Event Listener
-
-  button.addEventListener("click", () =>{renderCartList(array[i])
-});
+  button.addEventListener("click", () =>{});
 
   liItem.append(button);
-
   bridgeOne.append(liItem);
  }
  return bridgeOne;
 }
 
-const listItems = renderList(data);
+const listItems = renderStoreItems(storeItems);
 // console.log(listItems);
+
+
+// ACTION FUCNTIONS
+// addToCart()
+// - Does the item exist in the cart?
+// - If the item doesn't exist in the cart add it to cart with a quantity of 1
+// - If the item does exist in the cart then update the quantity by + 1
+
+// input: an object that represents a storeItem, an array for the cart
+// output: ??
+
+// const storeItems - array
+// const cartItems - array
+
+function addToCart(storeItem , cartItems) {
+  // console.log("Inside addToCart: ", storeItem, cartItems.length);
+
+  // ONE JOB: Check if storeItem exists in cartItems
+  // If it finds it... extract it!
+ for (let i = 0; i < cartItems.length; i++){
+const cartItem = cartItems[i];
+const cartItemId = cartItem.item.id;
+const storeItemId = storeItem.id;
+
+
+  // ONE JOB: If storeItem exists update the quantity
+
+   if(cartItemId === storeItemId){
+    cartItem.quantity += 1;
+  }
+  
+  const newCartItem = {
+    item: storeItem,
+    quantity: 1
+  };
+
+  // Else add storeItem to the cart
+  cartItems.push(newCartItem);
+
+  // }
+    return cartItems;
+}
+
+addToCart(storeItems[0], cartItems);
+addToCart(storeItems[0], cartItems);
+addToCart(storeItems[1], cartItems);
+addToCart(storeItems[1], cartItems);
 
 
 // Create bridge using: ul class="item-list cart--item-list"
@@ -151,7 +197,7 @@ const listItems = renderList(data);
 
 // Already declared => const bridgeTwo = document.querySelector(".cart--item-list");
 
-function renderCartList(objct){
+function renderCartItems(objct){
   const liItem = document.createElement("li");
   
   const img = document.createElement("img");
@@ -182,14 +228,15 @@ function renderCartList(objct){
   
    //Event Listener +
 
-buttonPlus.addEventListener('click', event => {span.innerText++});
+buttonPlus.addEventListener('click', () => {span.innerText = Number(span.innerText) + 1});
+
+console.log(span.innerText);
+console.log(span.innerText.value);
+
 
    //Event Listener -
 
-buttonMinus.addEventListener('click', event => {span.innerText--});
-
-// console.log(span.innerText);  - always 1 so it's not counting
-console.log(span.value);
+buttonMinus.addEventListener('click', event => {span.innerText = Number(span.innerText) - 1});
 
   liItem.append(buttonMinus);
   liItem.append(span);
@@ -197,15 +244,11 @@ console.log(span.value);
 
   bridgeTwo.append(liItem);
 
-//   if(Number(span.innerText) < 0){
-//  bridgeTwo.remove(liItem);
-// }
-
   return bridgeTwo
 }
 
-// const testTwo = renderCartList(data[0]);
-// console.log(testTwo);
+// const test = renderCartList(data[0]);
+// console.log(test);
 
 //Create bridge using: <div> <span class="total-number">£0.00</span> </div>
 // Render function to calculate the total
@@ -224,8 +267,7 @@ bridgeThree.innerText ="";
   let total = prices * times;
 
   bridgeThree.append(`£${total}`);
-  return total;
+  return bridgeThree;
 }
 
-
-const test = renderTotal(data[4] , 3);
+// const test = renderTotal(data[7] , 3);
