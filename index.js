@@ -100,35 +100,39 @@ const bridgeThree = document.querySelector(".total-number");
 
 function renderStoreItems(array){
  for (let i = 0; i < array.length; i++) {
+  const storeItem = array[i];
+
   const liItem = document.createElement("li");
 
   const divItem = document.createElement("div");
   divItem.className = "store--item-icon";
 
-  liItem.append(divItem);
-
  const img = document.createElement("img");
- const imgSrc = `assets/icons/${array[i].id}.svg`;
- const altSrc = `${array[i]}.name`;
+ const imgSrc = `assets/icons/${storeItem.id}.svg`;
+ const altSrc = storeItem.name;
  img.setAttribute("src",  imgSrc);
  img.setAttribute("alt" , altSrc);
 
   // console.log(img);
   divItem.append(img);
+  liItem.append(divItem);
 
   const button = document.createElement("button");
   button.innerText = "Add to cart";
 
     //Event Listener
-  button.addEventListener("click", () =>{});
+  button.addEventListener("click", () => {
+      // console.log("Store Item onClick: ", storeItem);
+      addToCart(storeItem, cartItems);
+      renderCartItems(cartItems);
+    });
 
   liItem.append(button);
   bridgeOne.append(liItem);
  }
- return bridgeOne;
 }
 
-const listItems = renderStoreItems(storeItems);
+// const listItems = renderStoreItems(storeItems);
 // console.log(listItems);
 
 
@@ -147,36 +151,80 @@ const listItems = renderStoreItems(storeItems);
 function addToCart(storeItem , cartItems) {
   // console.log("Inside addToCart: ", storeItem, cartItems.length);
 
-  // ONE JOB: Check if storeItem exists in cartItems
-  // If it finds it... extract it!
+   let itemFound = false;
+
+  // Check if storeItem exists in cartItems
+  // If storeItem exists update the quantity
+
  for (let i = 0; i < cartItems.length; i++){
 const cartItem = cartItems[i];
 const cartItemId = cartItem.item.id;
 const storeItemId = storeItem.id;
 
-
-  // ONE JOB: If storeItem exists update the quantity
-
    if(cartItemId === storeItemId){
     cartItem.quantity += 1;
+
+     itemFound = true;
   }
-  
+  }
+  // console.log(!itemFound);
+  // If storeItem doesn't exist in cart... add to cart
+
+ if (!itemFound) {
   const newCartItem = {
     item: storeItem,
     quantity: 1
   };
 
-  // Else add storeItem to the cart
+  // Add newCartItem to the cart
   cartItems.push(newCartItem);
-
-  // }
-    return cartItems;
+  }
 }
 
-addToCart(storeItems[0], cartItems);
-addToCart(storeItems[0], cartItems);
-addToCart(storeItems[1], cartItems);
-addToCart(storeItems[1], cartItems);
+// const beetroot = storeItems[0];
+// const carrot = storeItems[1];
+
+// addToCart(storeItems[0], cartItems);
+// addToCart(storeItems[0], cartItems);
+// addToCart(storeItems[1], cartItems);
+// addToCart(storeItems[1], cartItems);
+// addToCart(storeItems[1], cartItems);
+
+// console.log(cartItems);
+
+
+
+// //Function removefromCart
+
+// function removefromCart(storeItem , cartItems) {
+
+//    let itemFound = false;
+
+//   // Check if storeItem exists in cartItems
+//   // If storeItem exists update the quantity
+
+//  for (let i = 0; i < cartItems.length; i++){
+// const cartItem = cartItems[i];
+// const cartItemId = cartItem.item.id;
+// const storeItemId = storeItem.id;
+
+//    if(cartItemId === storeItemId){
+//     cartItem.quantity -= 1;
+
+//      itemFound = true;
+//   }
+//   }
+// // if the quantity = 0 unshift item ?
+//  for (let i = 0; i < cartItems.length; i++){
+// const cartItem = cartItems[i];
+// const cartItemQuantity = artItem.quantity;
+
+//    if(cartItemQuantity === 0){
+//     cartItems.splice(cartItem)
+//   }
+// }
+// }
+
 
 
 // Create bridge using: ul class="item-list cart--item-list"
@@ -197,58 +245,73 @@ addToCart(storeItems[1], cartItems);
 
 // Already declared => const bridgeTwo = document.querySelector(".cart--item-list");
 
-function renderCartItems(objct){
-  const liItem = document.createElement("li");
+// This function will render the items on the CartItems []
+
+function renderCartItems(array){
+
+ bridgeTwo.innerHTML = "";
+
+ for (let i = 0; i < array.length; i++){
+const cartItem = array[i];
+const item = cartItem.item;
+
+const liItem = document.createElement("li");
   
-  const img = document.createElement("img");
-  const imgSrc = `assets/icons/${objct.id}.svg`;
-  const altSrc = `objct.name`;
-  img.setAttribute("class",  "cart--item-icon");
-  img.setAttribute("src",  imgSrc);
-  img.setAttribute("alt" , altSrc);
+const img = document.createElement("img");
+const imgSrc = `assets/icons/${item.id}.svg`;
+const altSrc = `${item.name}`;
+img.setAttribute("class",  "cart--item-icon");
+img.setAttribute("src",  imgSrc);
+img.setAttribute("alt" , altSrc);
 
-  liItem.append(img);
+liItem.append(img);
 
-  const textP = document.createElement("p");
-  textP.innerText = objct.name;
+const textP = document.createElement("p");
+textP.innerText = item.name;
 
-  liItem.append(textP);
+liItem.append(textP);
 
-  const buttonMinus = document.createElement("button");
-  buttonMinus.className = "quantity-btn remove-btn center";
-  buttonMinus.innerText ="-";
+const buttonMinus = document.createElement("button");
+buttonMinus.className = "quantity-btn remove-btn center";
+buttonMinus.innerText ="-";
 
-  let span = document.createElement("span");
-  span.className = "quantity-text center";
-  span.innerText = 1;
+ //Event Listener -
+buttonMinus.addEventListener("click", () => {
+      // console.log("Item onClick: ", item);
+      removefromCart(item, cartItems);
+      renderCartItems(cartItems);
+    });
 
-  const buttonPlus = document.createElement("button");
-  buttonPlus.className = "quantity-btn add-btn center";
-  buttonPlus.innerText ="+";
-  
-   //Event Listener +
+liItem.append(buttonMinus);
 
-buttonPlus.addEventListener('click', () => {span.innerText = Number(span.innerText) + 1});
+let span = document.createElement("span");
+span.className = "quantity-text center";
+span.innerText = cartItem.quantity;
 
-console.log(span.innerText);
-console.log(span.innerText.value);
+console.log(cartItem);
 
+liItem.append(span);
 
-   //Event Listener -
+const buttonPlus = document.createElement("button");
+buttonPlus.className = "quantity-btn add-btn center";
+buttonPlus.innerText ="+";
 
-buttonMinus.addEventListener('click', event => {span.innerText = Number(span.innerText) - 1});
+ //Event Listener +
+buttonPlus.addEventListener("click", () => {
+      console.log("Item onClick: ", item);
+      addToCart(item, cartItems);
+      renderCartItems(cartItems);
+    });
 
-  liItem.append(buttonMinus);
-  liItem.append(span);
-  liItem.append(buttonPlus);
+liItem.append(buttonPlus);
 
-  bridgeTwo.append(liItem);
-
-  return bridgeTwo
+bridgeTwo.append(liItem);
+ }
 }
 
-// const test = renderCartList(data[0]);
-// console.log(test);
+// renderCartItems(cartItems);
+// console.log(cartItems);
+
 
 //Create bridge using: <div> <span class="total-number">£0.00</span> </div>
 // Render function to calculate the total
@@ -270,4 +333,13 @@ bridgeThree.innerText ="";
   return bridgeThree;
 }
 
+
 // const test = renderTotal(data[7] , 3);
+
+//function to make everytime work:
+
+function main() {
+  renderStoreItems(storeItems);
+}
+
+main();
